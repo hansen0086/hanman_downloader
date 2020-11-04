@@ -20,8 +20,8 @@ def natural_keys(text):
 
 imagelist = glob.glob("*.jpg")
 
-#folderlist = glob.glob('室友*')
 folderlist = os.listdir(os.getcwd())
+print(folderlist)
 folderlist.sort(key=natural_keys)
 # print(folderlist)
 temp = []
@@ -31,7 +31,5 @@ with open("output.pdf", "wb") as f:
         currjpgs = glob.glob(folder+"/"+"*.jpg")
         for i in currjpgs:
             imagelist.append(i)
-    # imagelist = imagelist[]
-    # print(imagelist[-1])
-
+    #imagelist = imagelist[:1200]
     f.write(img2pdf.convert([i for i in imagelist if i.endswith(".jpg")]))

@@ -23,10 +23,11 @@ def getHTMLText(url):
 
 #wrapper = soup.find('div', id='comicpage')
 
-def get_image(url):
+def get_image(url, title):
     text = getHTMLText(url)
     soup = BeautifulSoup(text, 'lxml')
     folder_name = soup.find('title').get_text().split('-')[0].strip()
+    folder_name = title+"/"+folder_name
     print('downlaoding:'+folder_name)
     try:
         os.mkdir(folder_name)
@@ -60,8 +61,37 @@ def get_next_url(url):
         return -1
 
 
+def getFirstUrl(keyword):
+    # keyword = input("Enter keyword: ")
+    search_url = "http://www.jjmhw.cc/search?keyword="+keyword
+    search_text = getHTMLText(search_url)
+    soup = BeautifulSoup(search_text, 'lxml')
+    soup.prettify()
+    ref = soup.findAll("li")[0].a['href']
+    next_url = "http://www.jjmhw.cc" + ref
+    next_text = getHTMLText(next_url)
+    soup = BeautifulSoup(next_text, 'lxml')
+    soup.prettify()
+    first = soup.findAll("li")[0].a['href']
+    return "http://www.jjmhw.cc" + first
+
+
+def getFirstTitle(keyword):
+    search_url = "http://www.jjmhw.cc/search?keyword="+keyword
+    search_text = getHTMLText(search_url)
+    soup = BeautifulSoup(search_text, 'lxml')
+    soup.prettify()
+    return soup.findAll("li")[-1].a['title']
+
+
 # main starts here:
-base_url = "http://www.jjmhw.cc/chapter/18061"
+keyword = input("Enter keyword: ")
+domain = "http://www.jjmhw.cc"
+title = getFirstTitle(keyword)
+print(title+" found")
+os.mkdir(title)
+
+base_url = getFirstUrl(keyword)
 
 
 current_url = base_url
@@ -70,7 +100,7 @@ while(True):
     # get_image(current_url)
     next_url = get_next_url(current_url)
     if(next_url != -1):
-        get_image(current_url)
+        get_image(current_url, title)
         # print(current_url)
         current_url = next_url
     else:
