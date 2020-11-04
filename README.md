@@ -5,3 +5,5 @@
 3. move combine.py in to the directories with folders
 ![](res/combine_file_location.JPG)
 4. combine jpgs into one whold pdf: python2 combine.py
+
+![](res/combine.JPG)
