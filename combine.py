@@ -52,7 +52,7 @@ folderlist.sort(key=natural_keys)
 # print(folderlist)
 temp = []
 
-with open("output.pdf", "wb") as f:
+with open(os.path.basename(os.getcwd())+".pdf", "wb") as f:
     for folder in folderlist:
         currjpgs = glob.glob(folder+"/"+"*.jpg")
         for i in currjpgs:
