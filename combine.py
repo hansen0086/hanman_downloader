@@ -54,10 +54,17 @@ temp = []
 
 with open(os.path.basename(os.getcwd())+".pdf", "wb") as f:
     for folder in folderlist:
+        print(folder)
         currjpgs = glob.glob(folder+"/"+"*.jpg")
         for i in currjpgs:
             imagelist.append(i)
-    # imagelist = imagelist[]
-    # print(imagelist[-1])
+    imagelist = imagelist[:1385]
+    print(imagelist[-1])
 
-    f.write(img2pdf.convert([i for i in imagelist if i.endswith(".jpg")]))
+    #f.write(img2pdf.convert([i for i in imagelist if i.endswith(".jpg")]))
+    for i in imagelist:
+        if(i.endswith(".jpg")):
+            try:
+                f.write(img2pdf.convert(i))
+            except:
+                pass
