@@ -33,6 +33,7 @@ def get_image(url, title):
         os.mkdir(folder_name)
     except:
         print("folder already exists")
+        return
     target = soup.findAll('img', class_='lazy')
     image_links = [each.get('data-original') for each in target]
     # print(image_links)
@@ -40,12 +41,12 @@ def get_image(url, title):
         print("trying downlaod " + each)
         filename = each.split('/')[-1]
         r = requests.get(each, stream=True)
-        if r.status_code == 200:
+        if (r.status_code == 200 and not os.path.isfile(folder_name+'/'+filename)):
             with open(folder_name+'/'+filename, 'wb') as f:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
 
-    return image_links
+    return
 
 
 def get_next_url(url):
@@ -53,11 +54,12 @@ def get_next_url(url):
     soup = BeautifulSoup(text, 'lxml')
     soup.prettify()
     # print(soup.findAll("li")[-1])
-    next = soup.findAll("li")[-1].a['href']
-    if (next):
-        target = "http://www.jjmhw.cc" + next
-        return target
-    else:
+    try:
+        next = soup.findAll("li")[-1].a['href']
+        if (next):
+            target = "http://www.jjmhw.cc" + next
+            return target
+    except:
         return -1
 
 
@@ -81,7 +83,8 @@ def getFirstTitle(keyword):
     search_text = getHTMLText(search_url)
     soup = BeautifulSoup(search_text, 'lxml')
     soup.prettify()
-    return soup.findAll("li")[-1].a['title']
+    print(soup.findAll("li"))
+    return soup.findAll("li")[0].a['title']
 
 
 # main starts here:
@@ -89,7 +92,11 @@ keyword = input("Enter keyword: ")
 domain = "http://www.jjmhw.cc"
 title = getFirstTitle(keyword)
 print(title+" found")
-os.mkdir(title)
+try:
+    os.mkdir(title)
+except:
+    pass
+
 
 base_url = getFirstUrl(keyword)
 
